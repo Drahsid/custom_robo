@@ -1,0 +1,65 @@
+ninja_required_version = 1.10
+
+BUILD_DIR = build
+
+# Tools
+TOOLS_DIR = tools
+
+CC = ${TOOLS_DIR}/ido_recomp/linux/7.1/cc
+CC_CHECK = gcc
+CPP = cpp
+
+CROSS = mips-linux-gnu-
+AS = ${CROSS}as
+LD = ${CROSS}ld
+OBJDUMP = ${CROSS}objdump
+OBJCOPY = ${CROSS}objcopy
+
+ASMPROCESSOR_DIR = ${TOOLS_DIR}/asm-processor
+ASMPROCESSOR = ${ASMPROCESSOR_DIR}/asm_processor.py
+ASMPROCESSOR_BUILD = ${ASMPROCESSOR_DIR}/build.py
+
+# System specific tools
+PYTHON = PYTHON_VALUE
+
+# Variables
+AS_FLAGS = -EB -mtune=vr4300 -march=vr4300 -mabi=32 -I include
+C_FLAGS = -G0 -Xfullwarn -Xcpluscomm -signed -nostdinc -non_shared -Wab,-r4300_mul -woff 649,838
+C_FLAGS_INCLUDE = -I . -I include -I ultralib/include
+D_FLAGS = -D_LANGUAGE_C -D_FINALROM -DF3DEX_GBI
+OPT_FLAGS = -O1
+MIPSISET = -mips2 -o32
+LD_FLAGS = -T __BASENAME__.ld -Map build/__BASENAME__.map -T undefined_syms_auto.txt -T undefined_funcs_auto.txt -T undefined_funcs.txt -T undefined_syms.txt --no-check-sections
+OBJCOPY_FLAGS = -O binary
+
+CC_CHECK_FLAGS = -fsyntax-only -fsigned-char -m32 -std=gnu90 -Wall -Wextra -Wno-format-security -Wno-unknown-pragmas -Wno-main -Wno-builtin-declaration-mismatch -Werror=implicit-function-declaration -DAVOID_UB
+
+rule compile_c_cpp
+    command = $CC_CHECK $CC_CHECK_FLAGS $D_FLAGS $C_FLAGS_INCLUDE -MMD -MP -MT ${BUILD_DIR}/${in}.o -MF $out $in
+    description = Compiling $in... (Syntax)
+
+rule compile_c
+    command = $PYTHON $ASMPROCESSOR_BUILD $CC -- $AS $AS_FLAGS -- -c -32 $C_FLAGS $OPT_FLAGS $MIPSISET $D_FLAGS $C_FLAGS_INCLUDE -o $out $in
+    description = Compiling $in...
+
+rule compile_c_permuter
+    command = $CC -c -32 $C_FLAGS $OPT_FLAGS $MIPSISET $D_FLAGS $C_FLAGS_INCLUDE -o $out $in
+    description = Compiling $in...
+
+rule assemble_s
+    command = $AS $AS_FLAGS -o $out $in
+    description = Assembling $in...
+
+rule compile_bin
+    command = $LD -r -b binary -o $out $in
+    description = Compiling $in...
+
+rule link
+    command = $LD $LD_FLAGS -o $out $in
+    description = Linking $out...
+
+rule objcopy
+    command = $OBJCOPY $OBJCOPY_FLAGS $in $out
+    description = Creating $out...
+
+

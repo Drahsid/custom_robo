@@ -1,0 +1,59 @@
+name: Custom Robo (North America)
+sha1: 59d69f2a730eac3a9966e12f18b009c242023aa9
+options:
+  basename: customrobo
+  target_path: baserom.us.z64
+  base_path: .
+  compiler: IDO
+  find_file_boundaries: True
+  do_c_func_detection: True
+  header_encoding: ASCII
+  platform: n64
+segments:
+  - name: header
+    type: header
+    start: 0x0
+
+  - name: boot
+    type: bin
+    start: 0x40
+
+  - name: entry
+    type: code
+    start: 0x1000
+    vram: 0x80025C00
+    subsegments:
+      - [0x1000, hasm, entrypoint]
+
+  - name: main
+    type: code
+    start: 0x1060
+    vram: 0x80025C60
+    subsegments:
+      - [0x1060, c]
+      - [0x2610, c]
+      - [0x21850, c, boot]
+      - [0x21970, asm]
+      - [0x28430, asm]
+      - [0x2CC30, asm, ultralib/createthread]
+      - [0x2D390, asm, ultralib/initialize]
+      - [0x39E60, asm, ultralib/startthread]
+      - [0x3AFB0, data]
+  - [0x566B0, bin]
+  - name: ray
+    type: code
+    start: 0x9DEE0
+    vram: 0x801785D0
+    symbol_name_format: $VRAM_$ROM
+    subsegments:
+      - [0x9DEE0, asm]
+  - name: overlay
+    type: code
+    start: 0xC4410
+    vram: 0x801D65F0
+    symbol_name_format: $VRAM_$ROM
+    subsegments:
+      - [0xC4410, asm]
+      - [0xF1240, bin]
+  - [0xDD4AE0, bin, trailer]
+  - [0x1000000]

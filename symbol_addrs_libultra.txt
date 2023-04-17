@@ -1,0 +1,6 @@
+osTvType = 0x80000300;
+
+__osInitialize_common = 0x80051F90;
+osCreateThread = 0x80051830;
+osStartThread = 0x8005EA60;
+

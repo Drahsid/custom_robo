@@ -1,0 +1,5 @@
+gFramebuffer0 = 0x80000400; // size:0x25800
+#include "symbol_addrs_libultra.txt"
+#include "symbol_addrs_data.txt"
+#include "symbol_addrs_funcs.txt"
+

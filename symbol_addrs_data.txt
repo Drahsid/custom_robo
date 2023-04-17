@@ -1,0 +1,5 @@
+sIdleThread = 0x80125030;
+sUnk0Thread = 0x801251E0;
+gUnk0Stack = 0x80125390; // size:0x2000
+gIdleStack = 0x80127390; // size:0x2000
+

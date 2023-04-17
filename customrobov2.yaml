@@ -1,0 +1,55 @@
+name: Customrobov2 (Japanese)
+sha1: f9515c2482af8df791339536f60260509c424f6a
+options:
+  basename: customrobov2
+  target_path: baserom.v2.z64
+  base_path: .
+  compiler: IDO
+  find_file_boundaries: True
+  header_encoding: ASCII
+  platform: n64
+  # undefined_funcs_auto: True
+  # undefined_funcs_auto_path: undefined_funcs_auto.txt
+  # undefined_syms_auto: True
+  # undefined_syms_auto_path: undefined_syms_auto.txt
+  # symbol_addrs_path: symbol_addrs.txt
+  # asm_path: asm
+  # src_path: src
+  # build_path: build
+  # extensions_path: tools/splat_ext
+  # mips_abi_float_regs: o32
+  # section_order: [".text", ".data", ".rodata", ".bss"]
+  # auto_all_sections: [".data", ".rodata", ".bss"]
+  # libultra_symbols: True
+  # hardware_regs: True
+segments:
+  - name: header
+    type: header
+    start: 0x0
+
+  - name: boot
+    type: bin
+    start: 0x40
+
+  - name: entry
+    type: code
+    start: 0x1000
+    vram: 0x80025C00
+    subsegments:
+      - [0x1000, hasm]
+
+  - name: main
+    type: code
+    start: 0x1060
+    vram: 0x80025C60
+    follows_vram: entry
+    bss_size: 0xB1D00
+    subsegments:
+      - [0x1060, asm]
+      - [0x3AE40, data]
+      - { start: 0x52990, type: bss, vram: 0x80077590 }
+
+  - type: bin
+    start: 0x52990
+    follows_vram: main
+  - [0x1000000]

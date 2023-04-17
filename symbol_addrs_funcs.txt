@@ -1,0 +1,8 @@
+boot = 0x80046450; // type:func
+idle = 0x800464B0; // type:func
+Vec3f_Add_Assignment = 0x8002A870; // type:func
+
+BattleArena_SetFighterPositions = 0x80183ECC; // type:func
+BattleArena_Initialize = 0x801F34C0; // type:func rom:0xE12E0
+BattleArena_Setup_Skybox = 0x801DC860; // type:func rom:0xCA680
+BattleArena_Setup_Fighter = 0x801E5400; // type:func rom:0xD3220
